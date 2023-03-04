@@ -1,0 +1,7 @@
+name: Better Guns
+version: '${project.version}'
+main: me.feusalamander.betterguns.betterguns.BetterGuns
+api-version: 1.19
+prefix: BetterGuns
+authors: [FeuSalamander]
+description: Better Guns is a plugin which brings gun the the game
