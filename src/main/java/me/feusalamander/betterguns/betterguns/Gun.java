@@ -1,5 +1,6 @@
 package me.feusalamander.betterguns.betterguns;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,10 +11,12 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringTokenizer;
 
 public class Gun implements Listener {
     public final String name;
@@ -21,20 +24,22 @@ public class Gun implements Listener {
     private final Double damage;
     private boolean click = false;
     private final String killmsg;
+    private final int maxammo;
     private List<Arrow> arrows = new ArrayList<>();
-    public Gun(final String name, final String id, final String click, final Double damage, final String killmsg){
+    public Gun(final String name, final String id, final String click, final Double damage, final String killmsg, final int maxammo){
         this.name = name;
         this.id = id;
         if(click.equalsIgnoreCase("right"))this.click = true;
         this.damage = damage;
         this.killmsg = killmsg;
+        this.maxammo = maxammo;
     }
     public ItemStack getItem(){
         final Material material = Material.getMaterial(id);
         if(material == null)return null;
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§a"+name);
+        meta.setDisplayName("§a"+name+" <"+maxammo+">");
         item.setItemMeta(meta);
         return item;
     }
@@ -72,9 +77,19 @@ public class Gun implements Listener {
         }
     }
     private void shoot(final Player p){
-        Arrow a = p.launchProjectile(Arrow.class);
-        arrows.add(a);
-        a.setVelocity(p.getLocation().getDirection().multiply(1.5));
+        ItemMeta meta = p.getItemInHand().getItemMeta();
+        String[] split = meta.getDisplayName().split(" ");
+        final int ammo = Integer.parseInt(StringUtils.substringBetween(split[1],"<",">"));
+        if(ammo<=0){
+            Bukkit.broadcastMessage("out of ammos");
+        }else{
+            Arrow a = p.launchProjectile(Arrow.class);
+            arrows.add(a);
+            a.setVelocity(p.getLocation().getDirection().multiply(1.5));
+            meta.setDisplayName(split[0]+" <"+(ammo-1)+">");
+            p.getItemInHand().setItemMeta(meta);
+        }
+
     }
     private void other(final Player p){
 

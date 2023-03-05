@@ -1,12 +1,14 @@
 #For the ids you must put a Material id which is in the Material list of the Spigot API 1.19.3, the link: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 shotgun:
-  name: shotgun #The name of the gun
+  name: Shotgun #The name of the gun
   id: IRON_AXE #The material of the gun
   click: LEFT #The click to shoot LEFT or RIGHT
   damage: 50
   kill-message: "#victim# has been killed by #killer#" #Use the placeholders #victim# and #killer# for the message
+  max-ammo: 5
 pistol:
-  name: pistol
+  name: Pistol
   id: GOLDEN_AXE
   click: RIGHT
   damage: 2
+  max-ammo: 10

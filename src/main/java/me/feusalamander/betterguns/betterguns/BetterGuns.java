@@ -35,7 +35,8 @@ public final class BetterGuns extends JavaPlugin {
                     section.getString("id"),
                     section.getString("click"),
                     section.getDouble("damage"),
-                    section.getString("kill-message"));
+                    section.getString("kill-message"),
+                    section.getInt("max-ammo"));
             guns.add(newgun);
         }
     }
