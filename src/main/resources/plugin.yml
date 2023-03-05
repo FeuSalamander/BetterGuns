@@ -5,3 +5,6 @@ api-version: 1.19
 prefix: BetterGuns
 authors: [FeuSalamander]
 description: Better Guns is a plugin which brings gun the the game
+commands:
+  bg:
+    description: List all of the available guns
