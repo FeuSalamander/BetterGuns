@@ -60,8 +60,7 @@ public class Listeners implements Listener {
     }
     @EventHandler
     private void onDamage(final EntityDamageByEntityEvent e){
-        if(!(e.getDamager() instanceof Player))return;
-        final Player p = (Player) e.getDamager();
+        if(!(e.getDamager() instanceof final Player p))return;
         final ItemStack item = p.getItemInHand();
         if(isGun(item))e.setCancelled(true);
     }

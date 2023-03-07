@@ -1,19 +1,23 @@
 #For the ids you must put a Material id which is in the Material list of the Spigot API 1.19.3, the link: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+#For the sound you must put a sound id which is in the Sound list of the Spigot API 1.19.3, the link: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 #The required parameters are noted with "[]"
 shotgun:
-  name: Shotgun # [] The name of the gun
-  id: IRON_AXE # [] The material of the gun
-  click: LEFT #The click to shoot LEFT or RIGHT
-  damage: 50 # []
+  name: Pistol # [] The name of the gun
+  id: GOLDEN_AXE # [] The material of the gun
+  click: RIGHT #The click to shoot LEFT or RIGHT
+  damage: 2 # []
   kill-message: "#victim# has been killed by #killer#" #Use the placeholders #victim# and #killer# for the message
-  max-ammo: 5 # []
-  reload-time: 40 #the time the gun will take to reload in ticks (1sec = 20ticks)
-  cooldown: 20 #the time the gun will take between shoot in ticks (1sec = 20ticks)
+  max-ammo: 10 # []
+  reload-time: 20 #the time the gun will take to reload in ticks (1sec = 20ticks)
+  cooldown: 5 #the time the gun will take between shoot in ticks (1sec = 20ticks)
+  sound: #Format: ID-VOLUME(0 to 1)-PITCH(0 to 2)-DELAY(in ticks) they are stackable like this: ID-VOLUME-PITCH-DELAY,ID-VOLUME-PITCH-DELAY
+    reload: ITEM_FLINTANDSTEEL_USE-1-2-28,ENTITY_PLAYER_LEVELUP-1-1-10
+    shoot: ENTITY_IRON_GOLEM_HURT-1-2-0,ENTITY_ZOMBIE_ATTACK_IRON_DOOR-1-2-0
 pistol:
-  name: Pistol
-  id: GOLDEN_AXE
+  name: Shotgun
+  id: IRON_AXE
   click: RIGHT
-  damage: 2
-  max-ammo: 10
-  reload-time: 20
-  cooldown: 5
+  damage: 50
+  max-ammo: 5
+  reload-time: 40
+  cooldown: 20

@@ -23,7 +23,6 @@ public final class BetterGuns extends JavaPlugin {
         getnames();
         for(Gun gun : guns)Bukkit.getPluginManager().registerEvents(gun, this);
     }
-
     @Override
     public void onDisable() {
         logger.info("BetterGuns by FeuSalamander is disabled !");
@@ -32,15 +31,18 @@ public final class BetterGuns extends JavaPlugin {
     private void createguns(){
         for(String gun : gunlist.config.getKeys(false)){
             final ConfigurationSection section = gunlist.config.getConfigurationSection(gun);
+            assert section != null;
             final Gun newgun = new Gun(
                     section.getString("name"),
                     section.getString("id"),
-                    section.getString("click"),
+                    Objects.requireNonNull(section.getString("click")),
                     section.getDouble("damage"),
                     section.getString("kill-message"),
                     section.getInt("max-ammo"),
                     section.getInt("reload-time"),
-                    section.getInt("cooldown"));
+                    section.getInt("cooldown"),
+                    section.getString("sound.reload"),
+                    section.getString("sound.shoot"));
             guns.add(newgun);
         }
     }

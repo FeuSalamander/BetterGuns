@@ -3,11 +3,11 @@ package me.feusalamander.betterguns.betterguns;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -27,6 +27,8 @@ public class Gun implements Listener {
     private final int maxammo;
     private final int reloadtime;
     private final int cooldown;
+    private final String soundShoot;
+    private final String soundReload;
     private final List<Arrow> arrows = new ArrayList<>();
     private final List<String> noshoot = new ArrayList<>();
     public Gun(final String name,
@@ -36,9 +38,13 @@ public class Gun implements Listener {
                final String killmsg,
                final int maxammo,
                final int reloadtime,
-               final int cooldown){
+               final int cooldown,
+               final String soundReload,
+               final String soundShoot){
         this.name = name;
         this.id = id;
+        this.soundShoot = soundShoot;
+        this.soundReload = soundReload;
         if(click.equalsIgnoreCase("right"))this.click = true;
         this.damage = damage;
         this.killmsg = killmsg;
@@ -104,6 +110,7 @@ public class Gun implements Listener {
                 if(!noshoot.contains(p.getName())){noshoot.add(p.getName());}else{return;}
                 Bukkit.getScheduler().runTaskLater(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("BetterGuns")), () -> noshoot.remove(p.getName()), cooldown);
             }
+            sound(soundShoot, p);
             Arrow a = p.launchProjectile(Arrow.class);
             arrows.add(a);
             a.setVelocity(p.getLocation().getDirection().multiply(1.5));
@@ -130,6 +137,7 @@ public class Gun implements Listener {
         }
         meta.setDisplayName(name+"r");
         item.setItemMeta(meta);
+        sound(soundReload, p);
         Bukkit.getScheduler().runTaskLater(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("BetterGuns")), () -> {
             if(p.getInventory().contains(item)){
                 int slot = p.getInventory().first(item);
@@ -138,6 +146,22 @@ public class Gun implements Listener {
                 p.getInventory().setItem(slot, item);
             }
         }, reloadtime);
+    }
+    private void sound(final String packsound, final Player p){
+        if(packsound != null){
+            String[] stack = packsound.split(",");
+            for(String allsound : stack){
+                String[] sound = allsound.split("-");
+                if(sound.length == 4){
+                    Bukkit.getScheduler().runTaskLater(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("BetterGuns")), () -> {
+                        p.getWorld().playSound(p.getLocation(), Sound.valueOf(sound[0]), Float.parseFloat(sound[1]), Float.parseFloat(sound[2]));
+                        Bukkit.broadcastMessage(sound[0]);
+                    }, Integer.parseInt(sound[3]));
+                }else {
+                    p.sendMessage("§cThe sound configuration of the gun has a problem");
+                }
+            }
+        }
     }
     public void clear(){
         for(Arrow arrow : arrows){
