@@ -116,12 +116,12 @@ public class Gun implements Listener {
     private void other(final Player p){
 
     }
-    public void reload(ItemStack item, Player p){
-        String name = item.getItemMeta().getDisplayName();
+    public void reload(final ItemStack item, final Player p){
+        final String name = item.getItemMeta().getDisplayName();
         if(name.endsWith("r"))return;
-        String ammo = StringUtils.substringBetween(name, "<", ">");
+        final String ammo = StringUtils.substringBetween(name, "<", ">");
         if(Integer.parseInt(ammo) == maxammo)return;
-        String n = name.replaceAll(ammo, String.valueOf(maxammo)).replaceAll("r", "");
+        final String n = name.replaceAll(ammo, String.valueOf(maxammo)).replaceAll("r", "");
         ItemMeta meta = item.getItemMeta();
         if(reloadtime == 0){
             meta.setDisplayName(n);

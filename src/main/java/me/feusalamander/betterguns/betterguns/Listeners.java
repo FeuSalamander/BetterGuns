@@ -1,13 +1,12 @@
 package me.feusalamander.betterguns.betterguns;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +18,13 @@ public class Listeners implements Listener {
     private final BetterGuns main;
     public Listeners(BetterGuns main){
         this.main = main;
+    }
+    private boolean isGun(final ItemStack item){
+        if(item == null||!item.hasItemMeta()||!item.getItemMeta().hasDisplayName())return false;
+        final String name = ChatColor.stripColor(Objects.requireNonNull(item).getItemMeta().getDisplayName());
+        String[] split = name.split(" ");
+        if(!main.names.contains(split[0]))return false;
+        return true;
     }
     @EventHandler
     private void oncommand(final PlayerCommandPreprocessEvent e){
@@ -50,22 +56,14 @@ public class Listeners implements Listener {
     private void onDestroy(final BlockBreakEvent e){
         final Player p = e.getPlayer();
         final ItemStack item = p.getItemInHand();
-        if(item.getType().equals(Material.AIR)||!item.getItemMeta().hasDisplayName())return;
-        final String name = ChatColor.stripColor(Objects.requireNonNull(item).getItemMeta().getDisplayName());
-        for(String s : name.split(" ")){
-            if(main.names.contains(s))e.setCancelled(true);
-        }
+        if(isGun(item))e.setCancelled(true);
     }
     @EventHandler
     private void onDamage(final EntityDamageByEntityEvent e){
         if(!(e.getDamager() instanceof Player))return;
         final Player p = (Player) e.getDamager();
         final ItemStack item = p.getItemInHand();
-        if(item.getType().equals(Material.AIR)||!item.getItemMeta().hasDisplayName())return;
-        final String name = ChatColor.stripColor(Objects.requireNonNull(item).getItemMeta().getDisplayName());
-        for(String s : name.split(" ")){
-            if(main.names.contains(s))e.setCancelled(true);
-        }
+        if(isGun(item))e.setCancelled(true);
     }
     @EventHandler
     private void onDrop(final PlayerDropItemEvent e){
@@ -82,10 +80,22 @@ public class Listeners implements Listener {
                         gun.reload(item, e.getPlayer());
                         return;
                     }
-
-
                 }
             }else return;
+        }
+    }
+    @EventHandler
+    private void onClick(final InventoryClickEvent e){
+        final ItemStack item = e.getCurrentItem();
+        final ItemStack item2 = e.getCursor();
+        if(!(isGun(item)||isGun(item2)))return;
+        final InventoryType inv = e.getView().getTopInventory().getType();
+        if(!(inv.equals(InventoryType.CRAFTING)||
+                inv.equals(InventoryType.CHEST)||
+                inv.equals(InventoryType.ENDER_CHEST)||
+                inv.equals(InventoryType.SHULKER_BOX)||
+                inv.equals(InventoryType.BARREL))){
+            e.setCancelled(true);
         }
     }
 }
